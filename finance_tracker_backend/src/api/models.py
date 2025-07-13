@@ -42,8 +42,9 @@ class UserOut(BaseModel):
     username: str
     email: EmailStr
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        'from_attributes': True
+    }
 
 # PUBLIC_INTERFACE
 class Token(BaseModel):
@@ -64,17 +65,18 @@ class CategoryOut(BaseModel):
     name: str
     is_income: bool
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        'from_attributes': True
+    }
 
 # PUBLIC_INTERFACE
 class TransactionIn(BaseModel):
     """Request model for creating or editing a transaction."""
-    amount: float = Field(..., description='Amount of transaction')
-    type: TransactionType = Field(..., description='Type of transaction (expense/income)')
-    category_id: int = Field(..., description='Category ID')
-    description: Optional[str] = Field(default=None, description='Description (optional)')
-    date: Optional[date] = Field(default=None, description='Transaction date (defaults to today)')
+    amount: float = Field(description='Amount of transaction')
+    type: TransactionType = Field(description='Type of transaction (expense/income)')
+    category_id: int = Field(description='Category ID')
+    description: Optional[str] = None
+    date: Optional[date] = None
 
 # PUBLIC_INTERFACE
 class TransactionOut(BaseModel):
