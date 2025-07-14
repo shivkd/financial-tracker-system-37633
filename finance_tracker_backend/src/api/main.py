@@ -31,8 +31,14 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def on_startup():
-    # Create tables if not existing
-    await create_database_and_tables()
+    # Create tables if not existing, but handle and log errors to avoid blocking startup
+    import logging
+    try:
+        await create_database_and_tables()
+    except Exception as e:
+        logging.error(f"Startup DB creation failed: {e}")
+        # Optionally, don't raise here (pass) to ensure non-blocking, depending on requirements
+        pass
 
 @app.get("/", tags=["Health"])
 def health_check():
