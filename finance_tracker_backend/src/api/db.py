@@ -78,8 +78,22 @@ class Budget(Base):
 
     user = relationship("User", back_populates="budgets")
     category = relationship("Category", back_populates="budgets")
-
 # ---------------- Utility Functions -----------------
+
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+
+# PUBLIC_INTERFACE
+async def get_db():
+    """
+    Dependency for retrieving a SQLAlchemy AsyncSession, to be used with FastAPI.
+    Ensures session is always closed cleanly.
+    """
+    async with SessionLocal() as session:
+        try:
+            yield session
+        finally:
+            await session.close()
 
 # PUBLIC_INTERFACE
 def get_password_hash(password: str) -> str:
